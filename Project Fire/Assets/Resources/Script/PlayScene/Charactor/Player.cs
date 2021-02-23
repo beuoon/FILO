@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     public TileBase FireWallTile; // 타일맵에 적용할 방화벽
 
     // 플레이어 스테이터스
+    //안녕안녕?
     protected enum _Act { Idle, Walk, Run, Rescue, Interact } // 캐릭터 행동 상태 종류
     protected _Act _playerAct; 
     private RescueTarget _rescueTarget; // 현재 구조중인 타겟
