@@ -18,7 +18,7 @@ public class GameMgr : MonoBehaviour
             return _instance;
         }
     }
-
+    //안녕?
     public int GameTurn = 0; // 게임 턴
     public Player[] Comp_Players; // 사용할 캐릭터들의 Componentsㄴ
     private int _currentChar = 0; // 현재 사용중인 캐릭터의 번호
