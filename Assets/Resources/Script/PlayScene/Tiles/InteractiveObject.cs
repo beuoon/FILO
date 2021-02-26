@@ -1,37 +1,32 @@
-﻿using UnityEngine;
-using UnityEngine.Tilemaps; // Tile Asset 생성용
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public abstract class InteractiveObject : Tile
+public abstract class InteractiveObject : MonoBehaviour
 {
-    public const string TILE_NAME = "InteractiveObject";
-    private bool IsBeenUsed;
-    protected Vector3Int Position;
+    protected Vector3Int _position;
+    public Vector3Int position {
+        set { _position = value; }
+        get { return _position; }
+	}
+    private bool IsBeenUsed = false;
 
-    public override bool StartUp(Vector3Int position, ITilemap tilemap, GameObject go) {
-        Position = position;
-        name = TILE_NAME;
-        IsBeenUsed = false;
-
-        return base.StartUp(position, tilemap, go);
-    }
-
-    public virtual bool IsAvailable() {
-        if (IsBeenUsed) return false;
-
+    protected int GetAroundPlayerCount() {
         int aroundPlayerCount = 0;
         Player[] players = GameMgr.Instance.Comp_Players;
         foreach (Player player in players) {
-            if ((player.currentTilePos - Position).magnitude < 2)
+            if ((player.currentTilePos - position).magnitude < 2)
                 aroundPlayerCount++;
         }
-
-        if (aroundPlayerCount < 1)
-            return false;
+        return aroundPlayerCount;
+    }
+    public virtual bool IsAvailable() {
+        if (IsBeenUsed) return false;
         return true;
     }
 
     public virtual void Activate() {
         if (!IsAvailable()) return;
         IsBeenUsed = true;
-	}
+    }
 }
