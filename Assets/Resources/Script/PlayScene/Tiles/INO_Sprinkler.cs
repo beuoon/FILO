@@ -8,6 +8,8 @@ public class INO_Sprinkler : InteractiveObject {
         if (!IsAvailable()) return;
         base.Activate();
 
+        Debug.Log("스프링쿨러 작동");
+
         List<Fire> fires = TileMgr.Instance.Fires;
         int count = fires.Count / 2;
 
@@ -16,15 +18,4 @@ public class INO_Sprinkler : InteractiveObject {
             fires.RemoveAt(index);
 		}
     }
-
-#if UNITY_EDITOR
-    [MenuItem("Assets/Create/Tiles/INO_Sprinkler")]
-    public static void CreateSprinkler() {
-        string path = EditorUtility.SaveFilePanelInProject("Save Sprinkler", "New Sprinkler", "asset", "Save Sprinkler", "Assets");
-        if (path == "") {
-            return;
-        }
-        AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<INO_Sprinkler>(), path);
-    }
-#endif
 }
