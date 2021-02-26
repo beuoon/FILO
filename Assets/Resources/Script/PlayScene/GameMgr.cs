@@ -50,6 +50,11 @@ public class GameMgr : MonoBehaviour
     private Text _timerText = null; // 시계 UI
     private int _minute; // 게임 상의 시간
 
+    private int _stage = 0;
+    public int stage {
+        get { return _stage; }
+    }
+
     private void Awake()
     {
         if(_instance == null)

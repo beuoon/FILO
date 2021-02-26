@@ -136,11 +136,10 @@ public class Player : MonoBehaviour
         // 주변에 있는 상호작용 오브젝트 탐색
         for (int y = -1; y <= 1; y++) {
             for (int x = -1; x <= 1; x++) {
-                Vector3Int targetPos = pos - new Vector3Int(x, y, 0);
-                TileBase tile = GameMgr.Instance.Obstacle.GetTile(targetPos);
-
-                if (tile != null && tile.name == InteractiveObject.TILE_NAME)
-                    return (InteractiveObject)tile;
+                Vector3Int targetPos = pos + new Vector3Int(x, y, 0);
+                InteractiveObject ino = TileMgr.Instance.GetInteractiveObject(targetPos);
+                if (ino != null && ino.IsAvailable())
+                    return ino;
             }
         }
 
@@ -160,11 +159,13 @@ public class Player : MonoBehaviour
 
     protected virtual void Activate() // 행동 들 (구조, 도구사용)
     {
-        InteractiveObject interactiveObject = SearchAroundInteractiveObject(_currentTilePos);
-        if (interactiveObject != null && interactiveObject.IsAvailable())
-            ActivateInteractBtn(interactiveObject);
-        else
-            DeactivateInteractBtn();
+        if (GameMgr.Instance.CurrentChar == _playerNum) {
+            InteractiveObject interactiveObject = SearchAroundInteractiveObject(currentTilePos);
+            if (interactiveObject != null && interactiveObject.IsAvailable())
+                ActivateInteractBtn(interactiveObject);
+            else
+                DeactivateInteractBtn();
+        }
 
         if (Input.GetMouseButtonUp(1) && GameMgr.Instance.CurrentChar == _playerNum) // 마우스 우클릭 시 현재 조작중인 캐릭터의 버튼 UI 표시
         {
