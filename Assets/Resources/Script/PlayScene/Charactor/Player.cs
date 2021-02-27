@@ -49,6 +49,10 @@ public class Player : MonoBehaviour
     // 타일 충돌체크용 값
     private GridLayout _tileLayout; // 타일맵 값 변경용 변수 (Tilemap::Background)
     private Vector3Int _currentTilePos = Vector3Int.zero; // 현재 캐릭터의 타일맵 좌표
+    public Vector3Int currentTilePos
+    {
+        get { return _currentTilePos; }
+    }
 
     // Local Component
     private Animator _anim; // 캐릭터 애니메이션
@@ -128,8 +132,42 @@ public class Player : MonoBehaviour
         }
     }
 
+    protected InteractiveObject SearchAroundInteractiveObject(Vector3Int pos) {
+        // 주변에 있는 상호작용 오브젝트 탐색
+        for (int y = -1; y <= 1; y++) {
+            for (int x = -1; x <= 1; x++) {
+                Vector3Int targetPos = pos + new Vector3Int(x, y, 0);
+                InteractiveObject ino = TileMgr.Instance.GetInteractiveObject(targetPos);
+                if (ino != null && ino.IsAvailable())
+                    return ino;
+            }
+        }
+
+        return null;
+    }
+    protected void ActivateInteractBtn(InteractiveObject interactiveObject) {
+        GameObject InteractiveBtn = UI_Actives.transform.Find("InteractBtn").gameObject;
+        Button button = (Button)InteractiveBtn.GetComponent("Button");
+        button.onClick.RemoveAllListeners();
+        button.onClick.AddListener(interactiveObject.Activate);
+
+        InteractiveBtn.SetActive(true);
+    }
+    protected void DeactivateInteractBtn() {
+        GameObject InteractiveBtn = UI_Actives.transform.Find("InteractBtn").gameObject;
+        InteractiveBtn.SetActive(false);
+    }
+
     protected virtual void Activate() // 행동 들 (구조, 도구사용)
     {
+        if (GameMgr.Instance.CurrentChar == _playerNum) {
+            InteractiveObject interactiveObject = SearchAroundInteractiveObject(currentTilePos);
+            if (interactiveObject != null && interactiveObject.IsAvailable())
+                ActivateInteractBtn(interactiveObject);
+            else
+                DeactivateInteractBtn();
+        }
+
         if (Input.GetMouseButtonUp(1) && GameMgr.Instance.CurrentChar == _playerNum) // 마우스 우클릭 시 현재 조작중인 캐릭터의 버튼 UI 표시
         {
             if (UI_Actives.activeSelf == true || UI_ToolBtns.activeSelf == true) // 이미 켜져있었다면 UI 끄기

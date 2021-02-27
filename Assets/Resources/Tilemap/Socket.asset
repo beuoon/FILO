@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4d059cb518141d4cad7bf11e36a9f46, type: 3}
-  m_Name: Water
+  m_Script: {fileID: 11500000, guid: fbae38350b83243429e42cfb914f94a2, type: 3}
+  m_Name: Socket
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 21300000, guid: a3f22c020fc122440bc895df784aa1c1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9453bd6147ca2714799a6ea5353fb2c2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -31,7 +31,7 @@ MonoBehaviour:
     e31: 0
     e32: 0
     e33: 1
-  m_InstancedGameObject: {fileID: 8880772214709725211, guid: c1fc4c40d6274a9499ada5e8b95b76de,
+  m_InstancedGameObject: {fileID: 164084731782014418, guid: b5ecbd8dc88748246a20c5ad4ccfa601,
     type: 3}
   m_Flags: 1
   m_ColliderType: 1

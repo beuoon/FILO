@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4d059cb518141d4cad7bf11e36a9f46, type: 3}
-  m_Name: Water
+  m_Script: {fileID: 11500000, guid: fbae38350b83243429e42cfb914f94a2, type: 3}
+  m_Name: CircuitBreaker
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 21300000, guid: a3f22c020fc122440bc895df784aa1c1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c94f2886dabf0e64e87e2da665d190c1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -31,7 +31,7 @@ MonoBehaviour:
     e31: 0
     e32: 0
     e33: 1
-  m_InstancedGameObject: {fileID: 8880772214709725211, guid: c1fc4c40d6274a9499ada5e8b95b76de,
+  m_InstancedGameObject: {fileID: 6922049167353198406, guid: 77bab2a50d44cea4f81e88c7f99ce715,
     type: 3}
   m_Flags: 1
   m_ColliderType: 1
