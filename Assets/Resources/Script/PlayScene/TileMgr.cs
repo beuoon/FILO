@@ -14,13 +14,20 @@ public class TileMgr // 하이어라키에 존재하지 않는 싱글톤이라 U
 
     private static readonly List<Dictionary<Vector3Int, Vector3Int>> DoorPairs = new List<Dictionary<Vector3Int, Vector3Int>>(){
         new Dictionary<Vector3Int, Vector3Int>(){
-            {new Vector3Int(-2, -4, 0), new Vector3Int(-1, -4, 0)},
-            {new Vector3Int(2, -2, 0), new Vector3Int(3, -2, 0)},
+            {new Vector3Int(-2, -4, 0), new Vector3Int(0, -4, 0)},
+        }
+    };
+    private static readonly List<Dictionary<Vector3Int, Vector3Int>> SocketPairs = new List<Dictionary<Vector3Int, Vector3Int>>(){
+        new Dictionary<Vector3Int, Vector3Int>(){
+            {new Vector3Int(2, -2, 0), new Vector3Int(4, -3, 0)},
         }
     };
     public static Vector3Int GetDoorPos(Vector3Int pos) {
         return DoorPairs[GameMgr.Instance.stage][pos];
-	}
+    }
+    public static Vector3Int GetSocketPos(Vector3Int pos) {
+        return SocketPairs[GameMgr.Instance.stage][pos];
+    }
 
     public static TileMgr Instance {
         get {
