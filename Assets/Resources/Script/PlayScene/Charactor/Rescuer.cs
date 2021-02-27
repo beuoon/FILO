@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class MainChar : Player
+public class Rescuer : Player
 {
     // Start is called before the first frame update
     protected override void Start()
