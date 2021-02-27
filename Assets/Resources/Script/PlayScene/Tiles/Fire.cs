@@ -11,6 +11,7 @@ public class Fire : MonoBehaviour
     public Vector3Int Pos // 좌표 Property
     {
         set { _pos = value; }
+        get { return _pos;  }
     }
 
     private List<int> _SearchArea; // 5x5 랜덤 탐색을 위한 Container

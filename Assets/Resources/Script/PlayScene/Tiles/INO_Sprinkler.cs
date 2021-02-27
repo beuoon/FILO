@@ -1,6 +1,5 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class INO_Sprinkler : InteractiveObject {
@@ -8,14 +7,13 @@ public class INO_Sprinkler : InteractiveObject {
         if (!IsAvailable()) return;
         base.Activate();
 
-        Debug.Log("스프링쿨러 작동");
-
         List<Fire> fires = TileMgr.Instance.Fires;
-        int count = fires.Count / 2;
+        int count = (int)Math.Ceiling(fires.Count / 2.0);
 
         for (int i = 0; i < count; i++) {
-            int index = Random.Range(0, fires.Count);
+            int index = UnityEngine.Random.Range(0, fires.Count);
+            GameMgr.Instance.Obstacle.SetTile(fires[index].Pos, null);
             fires.RemoveAt(index);
-		}
+        }
     }
 }
