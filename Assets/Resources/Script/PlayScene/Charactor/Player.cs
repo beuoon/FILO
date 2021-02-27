@@ -210,66 +210,55 @@ public class Player : MonoBehaviour
 
     IEnumerator UseFireExtinguisher() // 소화기 사용 코드 
     {
-        while(true)
+        yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
+        //좌표 값 변경으로 인해 수정해야 할 코드
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3Int nPos = GameMgr.Instance.BackTile.WorldToCell(mousePos); // 마우스의 타일맵 상 좌표
+        if (_currentTilePos.x - nPos.x < 2 &&
+            _currentTilePos.x - nPos.x > -2 &&
+            _currentTilePos.y - nPos.y < 2 &&
+            _currentTilePos.y - nPos.y > -2) // 누른 위치가 캐릭터 기준 2칸 이내라면
         {
-            if (Input.GetMouseButtonDown(0))
+            Vector3Int offset = Vector3Int.zero; // 소화기가 퍼져나갈 크기
+            if (mousePos.x > transform.position.x) // 마우스가 캐릭터보다 오른쪽에 있다면
             {
-                //좌표 값 변경으로 인해 수정해야 할 코드
-                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Vector3Int nPos = GameMgr.Instance.BackTile.WorldToCell(mousePos); // 마우스의 타일맵 상 좌표
-                if (_currentTilePos.x - nPos.x < 2 &&
-                    _currentTilePos.x - nPos.x > -2 &&
-                    _currentTilePos.y - nPos.y < 2 &&
-                    _currentTilePos.y - nPos.y > -2) // 누른 위치가 캐릭터 기준 2칸 이내라면
+                offset.x = 1;
+            }
+            else if (mousePos.x < transform.position.x) // 마우스가 캐릭터보다 왼쪽에 있다면
+            {
+                offset.x = -1;
+            }
+            if (mousePos.y > transform.position.y) // 마우스가 캐릭터보다 위에 있다면
+            {
+                offset.y = 1;
+            }
+            else if (mousePos.y < transform.position.y) // 마우스가 캐릭터보다 아래 있다면
+            {
+                offset.y = -1;
+            }
+            if (GameMgr.Instance.Obstacle.GetTile(nPos).name == "Fire") // 탐색한 타일이 큰 불 타일이라면
+            {
+                GameMgr.Instance.Obstacle.SetTile(nPos, null); // 불 제거
+                                                               //TileMgr의 Fire 리스트 속 ID를 검색받아 타일제거를 해야합니다 웅연쿤 // 고맙다 과거의 나
+                                                               //이 아래부턴 소화기가 퍼져나간 곳의 불타일을 제거하는 코드
+                nPos.x += offset.x;
+                if (GameMgr.Instance.Obstacle.GetTile(nPos).name == "Fire")
                 {
-                    Vector3Int offset = Vector3Int.zero; // 소화기가 퍼져나갈 크기
-                    if(mousePos.x > transform.position.x) // 마우스가 캐릭터보다 오른쪽에 있다면
-                    {
-                        offset.x = 1;
-                    }
-                    else if(mousePos.x < transform.position.x) // 마우스가 캐릭터보다 왼쪽에 있다면
-                    {
-                        offset.x = -1;
-                    }
-                    if(mousePos.y > transform.position.y) // 마우스가 캐릭터보다 위에 있다면
-                    {
-                        offset.y = 1;
-                    }
-                    else if(mousePos.y < transform.position.y) // 마우스가 캐릭터보다 아래 있다면
-                    {
-                        offset.y = -1;
-                    }
-                    if (GameMgr.Instance.Obstacle.GetTile(nPos).name == "Fire") // 탐색한 타일이 큰 불 타일이라면
-                    {
-                        GameMgr.Instance.Obstacle.SetTile(nPos, null); // 불 제거
-                        //TileMgr의 Fire 리스트 속 ID를 검색받아 타일제거를 해야합니다 웅연쿤 // 고맙다 과거의 나
-                        //이 아래부턴 소화기가 퍼져나간 곳의 불타일을 제거하는 코드
-                        nPos.x += offset.x;
-                        if (GameMgr.Instance.Obstacle.GetTile(nPos).name == "Fire")
-                        {
-                            GameMgr.Instance.Obstacle.SetTile(nPos, null);
-                        }
-                        nPos.x -= offset.x;
-                        nPos.y += offset.y;
-                        if (GameMgr.Instance.Obstacle.GetTile(nPos).name == "Fire")
-                        {
-                            GameMgr.Instance.Obstacle.SetTile(nPos, null);
-                        }
-                        nPos.x += offset.x;
-                        if (GameMgr.Instance.Obstacle.GetTile(nPos).name == "Fire")
-                        {
-                            GameMgr.Instance.Obstacle.SetTile(nPos, null);
-                        }
-                    }
-                    break;
+                    GameMgr.Instance.Obstacle.SetTile(nPos, null);
+                }
+                nPos.x -= offset.x;
+                nPos.y += offset.y;
+                if (GameMgr.Instance.Obstacle.GetTile(nPos).name == "Fire")
+                {
+                    GameMgr.Instance.Obstacle.SetTile(nPos, null);
+                }
+                nPos.x += offset.x;
+                if (GameMgr.Instance.Obstacle.GetTile(nPos).name == "Fire")
+                {
+                    GameMgr.Instance.Obstacle.SetTile(nPos, null);
                 }
             }
-            else // 누를때 까지 코루틴 대기
-            {
-                yield return null;
-            }
         }
-        yield return null;
     }
 
     private void UseFireWall() // 방화벽 설치

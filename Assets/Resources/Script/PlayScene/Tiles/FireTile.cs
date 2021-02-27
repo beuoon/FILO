@@ -10,7 +10,7 @@ public class FireTile : Tile
     {
         if(go != null)
         {
-            go.name = "Fire(" + position.x.ToString() + ", " + position.y.ToString() + ")";  // 이름 설정(좌표값)
+            go.name = "Fire";  // 이름 설정(좌표값)
             Fire Comp_fire = go.GetComponent<Fire>();
             Comp_fire.Pos = position; // Fire Instance의 좌표값 설정
             TileMgr.Instance.Fires.Add(Comp_fire); // TileMgr에 현재 생성된 Fire 추가
