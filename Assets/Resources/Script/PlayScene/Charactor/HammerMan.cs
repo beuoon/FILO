@@ -35,52 +35,13 @@ public class HammerMan : Player
         while (true) // 클릭 작용시까지 반복
         { 
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position; // 마우스 로컬 좌표
-            Vector3 Quaterant = Vector3.zero; // 4분면
-            if (mousePos.x > 0 && mousePos.y > 0) // 1분면
-            {
-                if(Mathf.Abs(mousePos.x) > Mathf.Abs(mousePos.y)) // x가 더 길때
-                {
-                    Quaterant = Vector3.right; // 캐릭터 기준 우측
-                }
-                else // y가 더 길떄
-                {
-                    Quaterant = Vector3.up; // 캐릭터 기준 위측
-                }
-            }
-            else if (mousePos.x < 0 && mousePos.y > 0) // 2분면
-            {
-                if (Mathf.Abs(mousePos.x) > Mathf.Abs(mousePos.y)) //x가 더 길때
-                {
-                    Quaterant = Vector3.left; // 캐릭터 기준 좌측
-                }
-                else
-                {
-                    Quaterant = Vector3.up; // 캐릭터 기준 위측
-                }
-            }
-            else if (mousePos.x < 0 && mousePos.y < 0) // 3분면
-            {
-                if (Mathf.Abs(mousePos.x) > Mathf.Abs(mousePos.y)) // x가 더 길때
-                {
-                    Quaterant = Vector3.left; // 캐릭터 기즌 좌측
-                }
-                else
-                {
-                    Quaterant = Vector3.down; // 캐릭터 기준 아래측
-                }
-            }
-            else // 4분면
-            {
-                if (Mathf.Abs(mousePos.x) > Mathf.Abs(mousePos.y)) // x가 더 길때
-                {
-                    Quaterant = Vector3.right; // 캐릭터 기준 우측
-                }
-                else
-                {
-                    Quaterant = Vector3.down; // 캐릭터 기준 아래측
-                }
-            }
-            Vector3Int nPos = GameMgr.Instance.BackTile.WorldToCell(transform.position) + new Vector3Int((int)Quaterant.x, (int)Quaterant.y, 0); // 새 좌표 갱신
+            Vector3Int direction; // 캐릭터 기준 마우스 방향
+            if (Mathf.Abs(mousePos.x) > Mathf.Abs(mousePos.y))
+                direction = (mousePos.x > 0) ? Vector3Int.right : Vector3Int.left;
+            else
+                direction = (mousePos.y > 0) ? Vector3Int.up: Vector3Int.down;
+
+            Vector3Int nPos = GameMgr.Instance.BackTile.WorldToCell(transform.position) + direction; // 새 좌표 갱신
             if (nPos != oPos) // 기존의 렌더부분과 갱신된 부분이 다르면
             {
                 GameMgr.Instance.BackTile.SetTileFlags(oPos, UnityEngine.Tilemaps.TileFlags.None); // 기존의 좌표 색 복구
