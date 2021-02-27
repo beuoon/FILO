@@ -33,6 +33,7 @@ public class Fire : MonoBehaviour
             for(int y=-1; y<=1; y++)
             {
                 Vector3Int nPos = new Vector3Int(_pos.x + x, _pos.y + y, _pos.z);
+                Debug.Log(gameObject.name + x.ToString() + "," + y.ToString());
                 if (obstacles.GetTile(nPos) == null)
                 {
                     obstacles.SetTile(nPos, TFire);

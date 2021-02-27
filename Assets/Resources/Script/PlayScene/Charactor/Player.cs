@@ -164,6 +164,7 @@ public class Player : MonoBehaviour
 
     public void Rescue() // 구조 버튼 누를 시 호출되는 함수
     {
+        Debug.Log("구조버튼 클릭");
         int RescueLayer = 1 << LayerMask.NameToLayer("Rescue"); // 생존자의 Layer
         RaycastHit2D hit = Physics2D.Raycast(transform.position, _moveDir, 128, RescueLayer); // 레이캐스트 쏘기
         if (hit)
@@ -180,6 +181,7 @@ public class Player : MonoBehaviour
     public void OpenToolBtns() // 도구 버튼 누를 시 호출되는 함수
     {
         UI_ToolBtns.SetActive(true); // 도구 UI 보이기
+        Debug.Log("도구버튼 클릭");
     }
 
     public void UseTool(int toolnum) // 도구 UI의 버튼 누를 시 호출되는 함수
@@ -214,14 +216,12 @@ public class Player : MonoBehaviour
             {
                 //좌표 값 변경으로 인해 수정해야 할 코드
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Vector3Int nPos = new Vector3Int(((int)mousePos.x / 1000), (int)mousePos.y / 1000, 0); // 마우스의 타일맵 상 좌표
-                if (mousePos.x - transform.position.x < 2000 &&
-                    mousePos.x - transform.position.x > -2000 &&
-                    mousePos.y - transform.position.y < 2000 &&
-                    mousePos.y - transform.position.y > -2000) // 누른 위치가 캐릭터 기준 2칸 이내라면
+                Vector3Int nPos = GameMgr.Instance.BackTile.WorldToCell(mousePos); // 마우스의 타일맵 상 좌표
+                if (_currentTilePos.x - nPos.x < 2 &&
+                    _currentTilePos.x - nPos.x > -2 &&
+                    _currentTilePos.y - nPos.y < 2 &&
+                    _currentTilePos.y - nPos.y > -2) // 누른 위치가 캐릭터 기준 2칸 이내라면
                 {
-                    Debug.Log("In Range");
-                    Debug.Log(nPos);
                     Vector3Int offset = Vector3Int.zero; // 소화기가 퍼져나갈 크기
                     if(mousePos.x > transform.position.x) // 마우스가 캐릭터보다 오른쪽에 있다면
                     {
@@ -275,8 +275,7 @@ public class Player : MonoBehaviour
     private void UseFireWall() // 방화벽 설치
     {
         //좌표 단위가 변화되면서 수정해야할 코드
-        Vector3Int nPos = new Vector3Int(((int)transform.position.x / 1000) + (int)_moveDir.x, ((int)transform.position.y + 500) / 1000, 0);
-        Debug.Log(nPos);
+        Vector3Int nPos = GameMgr.Instance.BackTile.WorldToCell(transform.position) + new Vector3Int((int)_moveDir.x, 0, 0);
         if (GameMgr.Instance.Obstacle.GetTile(nPos) == null) // 설치할 위치에 장애물이 없다면 방화벽 설치
         {
             GameMgr.Instance.Obstacle.SetTile(nPos, FireWallTile);
@@ -287,14 +286,14 @@ public class Player : MonoBehaviour
     {
         //좌표 단위가 변화되면서 수정해야할 코드
         int ObstacleLayer = 1 << LayerMask.NameToLayer("Obstacle"); // 장애물만 체크할 Layer
-        RaycastHit2D hit = Physics2D.Raycast(transform.position + (Vector3.up * 500), _moveDir, 128, ObstacleLayer); // 레이캐스트 발사=
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, _moveDir, 128, ObstacleLayer); // 레이캐스트 발사=
         if (hit)
         {
             Debug.Log("Ray hit");
             Debug.Log(hit.transform.name);
             if (hit.transform.CompareTag("Wall")) // 레이캐스트 충돌대상이 벽이라면
             {
-                Vector3Int nPos = new Vector3Int(((int)transform.position.x / 1000) + (int)_moveDir.x, ((int)transform.position.y + 500) / 1000, 0);
+                Vector3Int nPos = GameMgr.Instance.BackTile.WorldToCell(transform.position) + new Vector3Int((int)_moveDir.x, 0, 0);
                 GameMgr.Instance.Obstacle.SetTile(nPos, null); // 벽 제거
             }
         }
