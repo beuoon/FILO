@@ -297,22 +297,27 @@ public class Player : MonoBehaviour
         }
     }
 
-    protected virtual void OnTriggerEnter2D(Collider2D other) // 충돌체크
-    {
-        if(other.CompareTag("Fire")) // 충돌 대상이 큰 불이라면
-        {
+    protected virtual void OnTriggerEnter2D(Collider2D other) { // 충돌체크
+        switch (other.tag) {
+        case "Fire": // 큰 불
             _currentHp -= 25.0f; // 체력 감소
-            HPGage.fillAmount = _currentHp / _maxHp; // 체력 UI 변경
-            _currentMental-=2; // 멘탈 감소
-            MTGage.fillAmount = _currentMental / _maxMental; // 멘탈 UI 변경
-        }
-        else if(other.CompareTag("Ember")) // 충돌 대상이 작은 불이라면
-        {
+            _currentMental -= 2; // 멘탈 감소
+            break;
+
+        case "Ember": // 작은 불
             _currentHp -= 10.0f; // 체력 감소
-            HPGage.fillAmount = _currentHp / _maxHp; // 체력 UI 감소
             _currentMental--; // 멘탈 감소
-            MTGage.fillAmount = _currentMental / _maxMental; // 멘탈 UI 변경
+            break;
+
+        case "Electric":
+        case "Water(Electric)":
+            _currentHp -= 35.0f; // 체력 감소
+            _currentMental -= 2; // 멘탈 감소
+            break;
         }
+
+        HPGage.fillAmount = _currentHp / _maxHp; // 체력 UI 감소
+        MTGage.fillAmount = _currentMental / _maxMental; // 멘탈 UI 변경
     }
 
     //private void SetFOV()

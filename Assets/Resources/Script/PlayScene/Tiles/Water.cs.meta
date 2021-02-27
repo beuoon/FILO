@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ccfd23a38165d424ba78627f5a589783
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - WaterSprite: {fileID: 21300000, guid: a3f22c020fc122440bc895df784aa1c1, type: 3}
+  - WaterElectricSprite: {fileID: 21300000, guid: 495534af3c30ceb42b8ddc2bbd9f78e6,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
