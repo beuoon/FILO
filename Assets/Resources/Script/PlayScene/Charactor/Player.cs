@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
 
     // 플레이어 스테이터스
     //안녕안녕?
-    protected enum _Act { Idle, Walk, Run, Rescue, Interact } // 캐릭터 행동 상태 종류
+    protected enum _Act { Idle, Walk, Run, Rescue, Interact, Panic } // 캐릭터 행동 상태 종류
     protected _Act _playerAct; 
     private RescueTarget _rescueTarget; // 현재 구조중인 타겟
     [SerializeField]
@@ -25,12 +25,12 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _movespeed = 0.0f; // 캐릭터 이동속도
     [SerializeField]
-    private float _maxo2 = 0.0f; // 캐릭터 최대 산소량
+    protected float _maxo2 = 0.0f; // 캐릭터 최대 산소량
     public float MaxO2 // O2 Property
     {
         get { return _maxo2; }
     }
-    private float _currento2 = 0.0f; // 캐릭터 현재 산소량
+    protected float _currento2 = 0.0f; // 캐릭터 현재 산소량
     public float CurrentO2 // 현재 O2 Property
     {
         get { return _currento2; }
@@ -174,6 +174,7 @@ public class Player : MonoBehaviour
             {
                 UI_Actives.SetActive(false);
                 UI_ToolBtns.SetActive(false);
+                
             }
             else if (UI_Actives.activeSelf == false && UI_ToolBtns.activeSelf == false) // Active UI 보이기
             {
@@ -198,6 +199,11 @@ public class Player : MonoBehaviour
                 _playerAct = _Act.Idle; // Idle 상태로 변경
             }
         }
+    }
+
+    public virtual void ActiveSkill()
+    {
+        UI_Actives.SetActive(false);
     }
 
     public void Rescue() // 구조 버튼 누를 시 호출되는 함수
