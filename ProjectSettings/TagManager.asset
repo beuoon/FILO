@@ -10,6 +10,9 @@ TagManager:
   - Ember
   - RescueTarget
   - Wall
+  - Electric
+  - Water
+  - Water(Electric)
   layers:
   - Default
   - TransparentFX
@@ -23,7 +26,7 @@ TagManager:
   - Obstacle
   - FogOfWarMain
   - FogOfWarSec
-  - 
+  - Electric
   - 
   - 
   - 

@@ -25,6 +25,7 @@ public class Electric : MonoBehaviour {
                     RemoveElectric(pos);
             }
         }
+        TileMgr.Instance.Electrics.Remove(position);
     }
 
 	void Update() {

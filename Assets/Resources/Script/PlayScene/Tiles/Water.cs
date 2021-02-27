@@ -17,7 +17,11 @@ public class Water : MonoBehaviour {
         originElectrics = new HashSet<Vector3Int>();
     }
 
-    void Update() {
+	private void OnDestroy() {
+        TileMgr.Instance.Waters.Remove(position);
+    }
+
+	void Update() {
     }
 
     public void Electrify(Vector3Int originPos) {

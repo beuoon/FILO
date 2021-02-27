@@ -11,7 +11,11 @@ public abstract class InteractiveObject : MonoBehaviour
 	}
     private bool IsBeenUsed = false;
 
-    protected int GetAroundPlayerCount() {
+	private void OnDestroy() {
+        TileMgr.Instance.SetInteractiveObject(position, null);
+    }
+
+	protected int GetAroundPlayerCount() {
         int aroundPlayerCount = 0;
         Player[] players = GameMgr.Instance.Comp_Players;
         foreach (Player player in players) {
