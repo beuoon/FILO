@@ -148,6 +148,7 @@ public class Player : MonoBehaviour
     protected void ActivateInteractBtn(InteractiveObject interactiveObject) {
         GameObject InteractiveBtn = UI_Actives.transform.Find("InteractBtn").gameObject;
         Button button = (Button)InteractiveBtn.GetComponent("Button");
+        button.onClick.RemoveAllListeners();
         button.onClick.AddListener(interactiveObject.Activate);
 
         InteractiveBtn.SetActive(true);
