@@ -44,10 +44,8 @@ public class HammerMan : Player
             Vector3Int nPos = currentTilePos + direction; // 새 좌표 갱신
             if (nPos != oPos) // 기존의 렌더부분과 갱신된 부분이 다르면
             {
-                GameMgr.Instance.BackTile.SetTileFlags(oPos, UnityEngine.Tilemaps.TileFlags.None); // 기존의 좌표 색 복구
-                GameMgr.Instance.BackTile.SetColor(oPos, new Color(1, 1, 1, 1));
-                GameMgr.Instance.BackTile.SetTileFlags(nPos, UnityEngine.Tilemaps.TileFlags.None); // 새로운 좌표 색 변경
-                GameMgr.Instance.BackTile.SetColor(nPos, new Color(0, 0, 1, 1));
+                GameMgr.Instance.BackTile.SetColor(oPos, new Color(1, 1, 1, 1)); // 기존의 좌표 색 복구
+                GameMgr.Instance.BackTile.SetColor(nPos, new Color(0, 0, 1, 1)); // 새로운 좌표 색 변경
                 oPos = nPos;
             }
             if (Input.GetMouseButtonDown(0))
