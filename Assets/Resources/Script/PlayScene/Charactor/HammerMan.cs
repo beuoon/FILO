@@ -34,14 +34,14 @@ public class HammerMan : Player
         Vector3Int oPos = Vector3Int.zero; // 갱신용 old Pos
         while (true) // 클릭 작용시까지 반복
         { 
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position; // 마우스 로컬 좌표
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - GameMgr.Instance.BackTile.CellToWorld(currentTilePos); // 마우스 로컬 좌표
             Vector3Int direction; // 캐릭터 기준 마우스 방향
             if (Mathf.Abs(mousePos.x) > Mathf.Abs(mousePos.y))
                 direction = (mousePos.x > 0) ? Vector3Int.right : Vector3Int.left;
             else
                 direction = (mousePos.y > 0) ? Vector3Int.up: Vector3Int.down;
-
-            Vector3Int nPos = GameMgr.Instance.BackTile.WorldToCell(transform.position) + direction; // 새 좌표 갱신
+            
+            Vector3Int nPos = currentTilePos + direction; // 새 좌표 갱신
             if (nPos != oPos) // 기존의 렌더부분과 갱신된 부분이 다르면
             {
                 GameMgr.Instance.BackTile.SetTileFlags(oPos, UnityEngine.Tilemaps.TileFlags.None); // 기존의 좌표 색 복구

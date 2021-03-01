@@ -124,7 +124,10 @@ public class Player : MonoBehaviour
             {
                 _body.rotation = Quaternion.identity; // y값 초기화
             }
-            _currentTilePos = _tileLayout.WorldToCell(transform.position); // 현재 캐릭터의 타일맵 좌표 갱신
+
+            Vector3 worldPos = transform.position;
+            worldPos.y -= 100;
+            _currentTilePos = _tileLayout.WorldToCell(worldPos); // 현재 캐릭터의 타일맵 좌표 갱신
         }
         if (hor == 0 && ver == 0) // 이동 종료 시
         {
