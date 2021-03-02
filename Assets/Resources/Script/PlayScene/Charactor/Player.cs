@@ -40,7 +40,19 @@ public class Player : MonoBehaviour
     private float _useo2 = 0.0f; // 1초에 사용되는 산소량
     [SerializeField]
     private float _maxHp = 0.0f; // 최대 체력
+    public float MaxHP
+    {
+        get { return _maxHp; }
+        set { _maxHp = value; }
+    }
+    
     private float _currentHp = 0.0f; // 현재 체력
+    public float CurrentHP
+    {
+        get { return _currentHp; }
+        set { _currentHp = value; }
+    }
+    
     [SerializeField]
     private float _maxMental = 0; // 최대 멘탈
     private float _currentMental = 0; // 현재 멘탈
@@ -365,6 +377,26 @@ public class Player : MonoBehaviour
 
         HPGage.fillAmount = _currentHp / _maxHp; // 체력 UI 감소
         MTGage.fillAmount = _currentMental / _maxMental; // 멘탈 UI 변경
+    }
+
+    protected void RenderInteractArea(ref Vector3Int oPos)
+    {
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - GameMgr.Instance.BackTile.CellToWorld(currentTilePos); // 마우스 로컬 좌표
+        Vector3Int direction; // 캐릭터 기준 마우스 방향
+        if (Mathf.Abs(mousePos.x) > Mathf.Abs(mousePos.y))
+            direction = (mousePos.x > 0) ? Vector3Int.right : Vector3Int.left;
+        else
+            direction = (mousePos.y > 0) ? Vector3Int.up : Vector3Int.down;
+
+        Vector3Int nPos = currentTilePos + direction; // 새 좌표 갱신
+        if (nPos != oPos) // 기존의 렌더부분과 갱신된 부분이 다르면
+        {
+            GameMgr.Instance.BackTile.SetTileFlags(oPos, TileFlags.None);
+            GameMgr.Instance.BackTile.SetColor(oPos, new Color(1, 1, 1, 1)); // 기존의 좌표 색 복구
+            GameMgr.Instance.BackTile.SetTileFlags(nPos, TileFlags.None);
+            GameMgr.Instance.BackTile.SetColor(nPos, new Color(0, 0, 1, 1)); // 새로운 좌표 색 변경
+            oPos = nPos;
+        }
     }
 
     //private void SetFOV()
