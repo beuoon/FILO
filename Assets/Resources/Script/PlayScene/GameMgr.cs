@@ -37,6 +37,8 @@ public class GameMgr : MonoBehaviour
 
     private int _stage = 0;
 
+    private EventMgr eventMgr;
+
     public int stage {
         get { return _stage; }
     }
@@ -58,6 +60,13 @@ public class GameMgr : MonoBehaviour
         get { return _usedEmberCount; }
         set { _usedEmberCount = value; }
     } //현재 사용중인 작은 불의 숫자 Property
+
+    private void SetupStage(int stageNumber) {
+        _stage = stageNumber;
+        eventMgr = new EventMgr(stageNumber);
+    }
+
+
     private void Awake()
     {
         if(_instance == null)
@@ -86,7 +95,15 @@ public class GameMgr : MonoBehaviour
         _minute = 1189; // 게임 상의 시간
     }
 
-    public bool CheckEmberTick()
+	private void Start() {
+        SetupStage(stage);
+	}
+
+	private void Update() {
+        eventMgr.TurnUpdate();
+    }
+
+	public bool CheckEmberTick()
     {
         if (_EmberTime > 2.0f) // 2초가 지나면 true 반환
         {

@@ -14,8 +14,6 @@ public class EventMgr {
         LoadEvent(stage);
 	}
     private void LoadEvent(int stage) {
-        HashSet<int> notActivateEventIDs = new HashSet<int>();
-
         // XML Load
         XmlDocument doc = new XmlDocument();
         TextAsset textAsset = (TextAsset)Resources.Load("Event/Stage" + stage);
