@@ -8,8 +8,6 @@ public class InteractiveObjectTile : Tile {
             InteractiveObject ino = go.GetComponent<InteractiveObject>();
             ino.position = position;
             TileMgr.Instance.SetInteractiveObject(position, ino);
-
-            Debug.Log(position + "에 넣었습니다");
         }
 
         return base.StartUp(position, tilemap, go);
