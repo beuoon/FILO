@@ -381,7 +381,8 @@ public class Player : MonoBehaviour
 
     protected void RenderInteractArea(ref Vector3Int oPos)
     {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - GameMgr.Instance.BackTile.CellToWorld(currentTilePos); // 마우스 로컬 좌표
+        Vector3 basePos = GameMgr.Instance.BackTile.CellToWorld(currentTilePos) + GameMgr.Instance.BackTile.cellSize/2.0f;
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - basePos; // 마우스 로컬 좌표
         Vector3Int direction; // 캐릭터 기준 마우스 방향
         if (Mathf.Abs(mousePos.x) > Mathf.Abs(mousePos.y))
             direction = (mousePos.x > 0) ? Vector3Int.right : Vector3Int.left;
