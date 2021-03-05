@@ -32,6 +32,10 @@ public class EventMgr {
 
             events.Add(new Event(type, point, turn));
         }
+
+        events.Sort(delegate (Event e1, Event e2) {
+            return e1.LeftTurn.CompareTo(e2.LeftTurn);
+        });
     }
 
     public void TurnUpdate() {
@@ -45,6 +49,15 @@ public class EventMgr {
             else
                 i++;
 		}
+	}
+
+    public IReadOnlyList<Event> GetWillActiveEvents() {
+        List<Event> willActiveEvents = new List<Event>();
+        foreach (Event e in events) {
+            if (!e.IsSatisfiedWhenNextTurn) break;
+            willActiveEvents.Add(e);
+		}
+        return willActiveEvents;
 	}
 
     private void CreateEventObject(Event e) {

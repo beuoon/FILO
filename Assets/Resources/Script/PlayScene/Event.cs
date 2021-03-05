@@ -19,9 +19,15 @@ public class Event {
         leftTurn--;
     }
 
+    public int LeftTurn {
+        get { return leftTurn; }
+	}
     public bool IsSatisfied {
-        get { return leftTurn <= 0; }
+        get { return LeftTurn <= 0; }
     }
+    public bool IsSatisfiedWhenNextTurn {
+        get { return LeftTurn <= 1; }
+	}
 
     public static EventType StringToType(string text) {
         switch (text) {
