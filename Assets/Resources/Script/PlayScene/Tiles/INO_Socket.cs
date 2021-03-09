@@ -11,14 +11,9 @@ public class INO_Socket : InteractiveObject {
     public override void Activate() {
         base.Activate();
 
-        Debug.Log("소켓 작동");
-        if (TileMgr.Instance.Electrics.ContainsKey(position)) {
+        if (TileMgr.Instance.Electrics.ContainsKey(position))
             GameMgr.Instance.Obstacle.SetTile(position, null);
-            Debug.Log("전기 제거");
-        }
-        else {
-            Debug.Log("전기 생성");
+        else
             GameMgr.Instance.Obstacle.SetTile(position, electricTile);
-        }
     }
 }
