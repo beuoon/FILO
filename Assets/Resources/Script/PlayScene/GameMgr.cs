@@ -99,10 +99,6 @@ public class GameMgr : MonoBehaviour
         SetupStage(stage);
 	}
 
-	private void Update() {
-        eventMgr.TurnUpdate();
-    }
-
 	public bool CheckEmberTick()
     {
         if (_EmberTime > 2.0f) // 2초가 지나면 true 반환
@@ -118,6 +114,8 @@ public class GameMgr : MonoBehaviour
 
     public void TurnEnd() // 턴 종료 버튼 클릭 시 호출되는 함수
     {
+        eventMgr.TurnUpdate();
+
         for (int i = 0; i < Comp_Players.Length; i++) // 캐릭터들의 턴 종료 행동 함수 호출
         {
             Comp_Players[i].TurnEndActive();
