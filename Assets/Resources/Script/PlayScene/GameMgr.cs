@@ -36,8 +36,7 @@ public class GameMgr : MonoBehaviour
     private int _minute; // 게임 상의 시간
 
     private int _stage = 0;
-
-    private EventMgr eventMgr;
+    private DisasterMgr disasterMgr;
 
     public int stage {
         get { return _stage; }
@@ -63,7 +62,7 @@ public class GameMgr : MonoBehaviour
 
     private void SetupStage(int stageNumber) {
         _stage = stageNumber;
-        eventMgr = new EventMgr(stageNumber);
+        disasterMgr = new DisasterMgr(stageNumber);
     }
 
 
@@ -114,7 +113,7 @@ public class GameMgr : MonoBehaviour
 
     public void TurnEnd() // 턴 종료 버튼 클릭 시 호출되는 함수
     {
-        eventMgr.TurnUpdate();
+        disasterMgr.TurnUpdate();
 
         for (int i = 0; i < Comp_Players.Length; i++) // 캐릭터들의 턴 종료 행동 함수 호출
         {

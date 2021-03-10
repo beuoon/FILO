@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 
-public class Event {
-    public enum EventType {
+public class Disaster {
+    public enum DisasterType {
         FALLING_ROCK, SHORT_CIRCUIT, FLASHOVER, SMOKE
     }
 
-    public readonly EventType type;
+    public readonly DisasterType type;
     public readonly Vector3Int position;
     private int leftTurn;
 
-    public Event(EventType type, Vector3Int position, int turn) {
+    public Disaster(DisasterType type, Vector3Int position, int turn) {
         this.type = type;
         this.position = position;
         this.leftTurn = turn;
@@ -29,13 +29,13 @@ public class Event {
         get { return LeftTurn <= 1; }
 	}
 
-    public static EventType StringToType(string text) {
+    public static DisasterType StringToType(string text) {
         switch (text) {
-        case "FALLING_ROCK": return EventType.FALLING_ROCK;
-        case "SHORT_CIRCUIT": return EventType.SHORT_CIRCUIT;
-        case "FLASHOVER": return EventType.FLASHOVER;
-        case "SMOKE": return EventType.SMOKE;
+        case "FALLING_ROCK": return DisasterType.FALLING_ROCK;
+        case "SHORT_CIRCUIT": return DisasterType.SHORT_CIRCUIT;
+        case "FLASHOVER": return DisasterType.FLASHOVER;
+        case "SMOKE": return DisasterType.SMOKE;
         }
-        return EventType.FALLING_ROCK;
+        return DisasterType.FALLING_ROCK;
     }
 }
