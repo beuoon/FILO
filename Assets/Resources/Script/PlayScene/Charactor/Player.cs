@@ -14,10 +14,12 @@ public class Player : MonoBehaviour
     public GameObject UI_ToolBtns; // 도구 버튼 UI
     public GameObject FireWall; // 방화벽 Prefab
     public TileBase FireWallTile; // 타일맵에 적용할 방화벽
+    private Text _mentalText; // ID Card 멘탈 Text UI
+    private Text _stateText; // ID Card 상태 Text UI
 
     // 플레이어 스테이터스
     //안녕안녕?
-    protected enum _Act { Idle, Walk, Run, Rescue, Interact, Panic } // 캐릭터 행동 상태 종류
+    protected enum _Act { Idle, Walk, Run, Rescue, Interact, Panic, Retire } // 캐릭터 행동 상태 종류
     protected _Act _playerAct; 
     private RescueTarget _rescueTarget; // 현재 구조중인 타겟
     [SerializeField]
@@ -74,6 +76,8 @@ public class Player : MonoBehaviour
     protected virtual void Start()
     {
         _tileLayout = GameMgr.Instance.BackTile.GetComponent<GridLayout>();
+        _mentalText = GameObject.FindWithTag("MentalText").GetComponent<Text>();
+        _stateText = GameObject.FindWithTag("StateText").GetComponent<Text>();
         _anim = GetComponentInChildren<Animator>();
         _currento2 = _maxo2;
         _currentHp = _maxHp;
@@ -93,7 +97,7 @@ public class Player : MonoBehaviour
         float ver = Input.GetAxisRaw("Vertical");
 
         //구조 상태가 아니며, 현재 체력과 산소가 남아있는 현재 조종중인 캐릭터를 Translate로 이동시킨다.
-        if (_currento2 > 0.0f && GameMgr.Instance.CurrentChar == _playerNum && _currentHp > 0.0f && _playerAct != _Act.Rescue)
+        if (_currento2 > 0.0f && GameMgr.Instance.CurrentChar == _playerNum && _currentHp > 0.0f && _playerAct != _Act.Rescue && _currentMental > 0)
         {
             this.transform.Translate(hor * Time.deltaTime * _movespeed, ver * Time.deltaTime * _movespeed, 0.0f);
             O2Gage.fillAmount = _currento2 / _maxo2; // 산소 UI 변화
@@ -212,6 +216,7 @@ public class Player : MonoBehaviour
             {
                 _rescueTarget.gameObject.SetActive(false); // 구조 대상 숨기기
                 _playerAct = _Act.Idle; // Idle 상태로 변경
+                ChangeStateText();
             }
         }
     }
@@ -232,6 +237,7 @@ public class Player : MonoBehaviour
             {
                 _rescueTarget = hit.transform.GetComponent<RescueTarget>(); // 생존자 값 저장
                 _playerAct = _Act.Rescue; // 구조 상태로 변경
+                ChangeStateText();
             }
         }
         UI_Actives.SetActive(false); // UI 숨기기
@@ -374,9 +380,18 @@ public class Player : MonoBehaviour
             _currentMental -= 2; // 멘탈 감소
             break;
         }
+        if(_currentHp <= 0)
+        {
+            _playerAct = _Act.Retire;
+        }
+        else if(_currentMental <= 0)
+        {
+            _playerAct = _Act.Panic;
+        }
 
         HPGage.fillAmount = _currentHp / _maxHp; // 체력 UI 감소
-        MTGage.fillAmount = _currentMental / _maxMental; // 멘탈 UI 변경
+        ChangeMentalText(); // 멘탈 UI 변경
+        ChangeStateText(); // 상태 UI 변경
     }
 
     protected void RenderInteractArea(ref Vector3Int oPos)
@@ -396,6 +411,56 @@ public class Player : MonoBehaviour
             GameMgr.Instance.BackTile.SetTileFlags(nPos, TileFlags.None);
             GameMgr.Instance.BackTile.SetColor(nPos, new Color(0, 0, 1, 1)); // 새로운 좌표 색 변경
             oPos = nPos;
+        }
+    }
+
+    public void ChangeMentalText()
+    {
+        switch(_currentMental)
+        {
+            case 4:
+                _mentalText.text = "아주좋음";
+                _mentalText.color = new Color(0, 1, 1);
+                break;
+            case 3:
+                _mentalText.text = "좋    음";
+                _mentalText.color = new Color(0.52f, 0.796f, 0.063f);
+                break;
+            case 2:
+                _mentalText.text = "보    통";
+                _mentalText.color = new Color(0.992f, 0.82f, 0.02f);
+                break;
+            case 1:
+                _mentalText.text = "나    쁨";
+                _mentalText.color = new Color(1, 0.5f, 0);
+                break;
+            default:
+                _mentalText.text = "패    닉";
+                _mentalText.color = new Color(0.8f, 0.353f, 0.353f);
+                break;
+        }
+    }
+
+    public void ChangeStateText()
+    {
+        switch(_playerAct)
+        {
+            case _Act.Rescue:
+                _stateText.text = "구조중";
+                _stateText.color = new Color(1, 0.5f, 0);
+                break;
+            case _Act.Retire:
+                _stateText.text = "행동불능";
+                _stateText.color = new Color(0.35f, 0.35f, 0.35f);
+                break;
+            case _Act.Panic:
+                _stateText.text = "패    닉";
+                _stateText.color = new Color(0.8f, 0.35f, 0.35f);
+                break;
+            default:
+                _stateText.text = "정    상";
+                _stateText.color = new Color(1, 1, 1);
+                break;
         }
     }
 
