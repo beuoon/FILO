@@ -4,31 +4,28 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Tilemaps;
 
-public class RescueTarget : MonoBehaviour
+public class RescueTarget : Charactor
 {
     public Image HPGage;
-    public Tile RTTile; // Rescue Target Tile
-    public Image SmileMark;
+    public GameObject SmileMark;
 
     private enum _state { Panic, Static }
     private _state _RescueTargetState;
 
     protected int _rescueCount = 0;
+
+    private int _panicMoveCount = 2;
+    private float _speed = 100.0f;
     public int RescueCount
     {
         get { return _rescueCount; }
         set { _rescueCount = value; }
     }
 
-    protected float _MaxHP = 60.0f;
-    protected float _currentHP = 0.0f;
-    private int _panicMoveCount = 2;
-    private float _speed = 100.0f;
-
     // Start is called before the first frame update
-    private void Start()
+    protected override void Start()
     {
-        _currentHP = _MaxHP;
+        base.Start();
         switch(_RescueTargetState)
         {
             case _state.Panic:
@@ -38,14 +35,12 @@ public class RescueTarget : MonoBehaviour
                 _rescueCount = 2;
                 break;
         }
-        GameMgr.Instance.RescueTilemap.SetTile(GameMgr.Instance.RescueTilemap.WorldToCell(transform.position), RTTile);
     }
 
     public void TurnEndActive()
     {
-        if (GameMgr.Instance.GameTurn % 1 == 0)
+        if (GameMgr.Instance.GameTurn % 1 == 0 && _RescueTargetState == _state.Panic)
         {
-            Debug.Log("Start");
             StartCoroutine(Move());
         }
     }
@@ -54,9 +49,9 @@ public class RescueTarget : MonoBehaviour
     {
         if (other.CompareTag("Fire"))
         {
-            _currentHP -= 25.0f;
-            HPGage.fillAmount = _currentHP / _MaxHP;
-            if(_currentHP / _MaxHP < 0.5f && _RescueTargetState == _state.Panic)
+            SetCurrentHP(-25.0f);
+            HPGage.fillAmount = _currentHp / _maxHp;
+            if(_currentHp / _maxHp < 0.5f && _RescueTargetState == _state.Panic)
             {
                 _rescueCount++;
                 _RescueTargetState = _state.Static;
@@ -64,9 +59,9 @@ public class RescueTarget : MonoBehaviour
         }
         else if (other.CompareTag("Ember"))
         {
-            _currentHP -= 10.0f;
-            HPGage.fillAmount = _currentHP / _MaxHP;
-            if (_currentHP / _MaxHP < 0.5f && _RescueTargetState == _state.Panic)
+            SetCurrentHP(-25.0f);
+            HPGage.fillAmount = _currentHp / _maxHp;
+            if (_currentHp / _maxHp < 0.5f && _RescueTargetState == _state.Panic)
             {
                 _rescueCount++;
                 _RescueTargetState = _state.Static;
@@ -76,13 +71,16 @@ public class RescueTarget : MonoBehaviour
 
     public void ActiveSmileMark()
     {
-        //StartCoroutine()
+        StartCoroutine(DisableSmileMarkCounter());
     }
 
-    //IEnumerator DisableSmileMarkCounter()
-    //{
-    //    //yield return new WaitWhile(())
-    //}
+    IEnumerator DisableSmileMarkCounter()
+    {
+        SmileMark.SetActive(true);
+        int oldGameTurn = GameMgr.Instance.GameTurn;
+        yield return new WaitWhile(() => GameMgr.Instance.GameTurn - oldGameTurn < 2);
+        SmileMark.SetActive(false);
+    }
 
     IEnumerator Move()
     {
@@ -129,11 +127,27 @@ public class RescueTarget : MonoBehaviour
                 arrivePos = GameMgr.Instance.BackTile.CellToWorld(nPos) - (GameMgr.Instance.BackTile.cellSize / 2);
 
                 _panicMoveCount--;
-                GameMgr.Instance.RescueTilemap.SetTile(GameMgr.Instance.RescueTilemap.WorldToCell(transform.position) - new Vector3Int(randx, randy, 0), null);
-                GameMgr.Instance.RescueTilemap.SetTile(GameMgr.Instance.RescueTilemap.WorldToCell(transform.position), RTTile);
             }
         }
+        TileMgr.Instance.RescueTargets.Remove(GameMgr.Instance.BackTile.WorldToCell(transform.position));
+        TileMgr.Instance.RescueTargets.Add(GameMgr.Instance.BackTile.WorldToCell(transform.position), this);
         _panicMoveCount = 2;
         Debug.Log("Panic Done");
+    }
+    public override void SetCurrentHP(float value)
+    {
+        _currentHp += value;
+        if (_currentHp <= 0)
+        {
+            Destroy(gameObject);
+        }
+        else if (_currentHp > _maxHp)
+        {
+            _currentHp = _maxHp;
+        }
+    }
+
+    public override void SetCurrentO2(float value)
+    {
     }
 }

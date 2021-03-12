@@ -18,44 +18,46 @@ public class GameMgr : MonoBehaviour
             return _instance;
         }
     }
-    //안녕?
+
+
     public int GameTurn = 0; // 게임 턴
-    public Player[] Comp_Players; // 사용할 캐릭터들의 Componentsㄴ
+    public Player[] Comp_Players; // 사용할 캐릭터들의 Components
     private int _currentChar = 0; // 현재 사용중인 캐릭터의 번호
-    public int CurrentChar
-    {
-        get { return _currentChar; }
-        set { _currentChar = value; }
-    } // CurrentChar Property
     private float _EmberTime = 0.0f; // 작은 불 생성 주기
-    public float EmberTime
-    {
-        get { return _EmberTime; }
-        set { _EmberTime = value; }
-    } // 작은 불 생성 주기Property
     private int _usedEmberCount = 0; // 현재 사용중인 작은 불의 숫자
-    public int UsedEmberCount
-    {
-        get { return _usedEmberCount; }
-        set { _usedEmberCount = value; }
-    } //현재 사용중인 작은 불의 숫자 Property
     public Transform Embers; // 작은 불의 부모 오브젝트의 Transform
     public GameObject Ember; // 작은 불 Prefab
-    public Transform RescueTargets; // 생존자의 부모 오브젝트
     public Tilemap BackTile; // Background Tilemap
     public Tilemap Obstacle; // Obstacel Tilemap
     public Tilemap RescueTilemap; // RescueTarget Tilemap
 
-    private RescueTarget[] _RTs; // 생존자들의 Components
     [SerializeField]
     private Text _timerText = null; // 시계 UI
     private int _minute; // 게임 상의 시간
 
     private int _stage = 0;
+
     public int stage {
         get { return _stage; }
     }
 
+    public int CurrentChar
+    {
+        get { return _currentChar; }
+        set { _currentChar = value; }
+    } // CurrentChar Property
+
+    public float EmberTime
+    {
+        get { return _EmberTime; }
+        set { _EmberTime = value; }
+    } // 작은 불 생성 주기Property
+
+    public int UsedEmberCount
+    {
+        get { return _usedEmberCount; }
+        set { _usedEmberCount = value; }
+    } //현재 사용중인 작은 불의 숫자 Property
     private void Awake()
     {
         if(_instance == null)
@@ -81,7 +83,6 @@ public class GameMgr : MonoBehaviour
         //        }
         //    }
         //}
-        _RTs = RescueTargets.GetComponentsInChildren<RescueTarget>(); // 생존자 Components 할당
         _minute = 1189; // 게임 상의 시간
     }
 
@@ -109,9 +110,9 @@ public class GameMgr : MonoBehaviour
             TileMgr.Instance.Fires[i].SpreadFire();
         }
         GameTurn++; // 턴 증가
-        for (int i = 0; i < _RTs.Length; i++) // 생존자들의 턴 종료 행동 함수 호출
+        foreach(var rt in TileMgr.Instance.RescueTargets) // 생존자 턴 종료 이동
         {
-            _RTs[i].TurnEndActive();
+             rt.Value.TurnEndActive();
         }
         Debug.Log(GameTurn + "TurnEnd");
         _minute += 5;

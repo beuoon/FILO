@@ -9,7 +9,8 @@ public class TileMgr // 하이어라키에 존재하지 않는 싱글톤이라 U
     public List<Wall> Walls; // 현재 생성된 Wall Instance의 Components
     public Dictionary<Vector3Int, Electric> Electrics;
     public Dictionary<Vector3Int, Water> Waters;
-    
+    public Dictionary<Vector3Int, RescueTarget> RescueTargets;
+
     private Dictionary<Vector3Int, InteractiveObject> m_interactiveObjects;
 
     private static readonly List<Dictionary<Vector3Int, Vector3Int>> DoorPairs = new List<Dictionary<Vector3Int, Vector3Int>>(){
@@ -42,6 +43,7 @@ public class TileMgr // 하이어라키에 존재하지 않는 싱글톤이라 U
         Walls = new List<Wall>();
         Electrics = new Dictionary<Vector3Int, Electric>();
         Waters = new Dictionary<Vector3Int, Water>();
+        RescueTargets = new Dictionary<Vector3Int, RescueTarget>();
 
         m_interactiveObjects = new Dictionary<Vector3Int, InteractiveObject>();
     }

@@ -17,22 +17,17 @@ public class Rescuer : Player
     public override void ActiveSkill()
     {
         base.ActiveSkill();
+        Debug.Log("구조맨 스킬 사용");
         int range = 5;
+        int offset = -(range / 2);
         Vector3Int nPos = GameMgr.Instance.RescueTilemap.WorldToCell(transform.position);
-        for(int i=0; i<range;i++)
+        for(int i= offset; i<range + offset;i++)
         {
-            for(int j=0; j<range; j++)
+            for(int j= offset; j<range + offset; j++)
             {
-                if(GameMgr.Instance.RescueTilemap.GetTile(nPos + new Vector3Int(i, j, 0)) != null)
+                if(TileMgr.Instance.RescueTargets.ContainsKey(nPos + new Vector3Int(i, j, 0)))
                 {
-                    int RescueLayer = 1 << LayerMask.NameToLayer("Rescue"); // 생존자의 Layer
-                    RaycastHit2D hit = Physics2D.Raycast(GameMgr.Instance.RescueTilemap.CellToWorld(nPos + new Vector3Int(i, j, 0)), Vector3.back, range, RescueLayer); // 레이캐스트 쏘기
-                    if (hit)
-                    {
-                        if (hit.transform.CompareTag("RescueTarget")) // 레이캐스트 충돌 대상이 구조대상이라면
-                        {
-                        }
-                    }
+                    TileMgr.Instance.RescueTargets[nPos + new Vector3Int(i, j, 0)].ActiveSmileMark();
                 }
             }
         }
