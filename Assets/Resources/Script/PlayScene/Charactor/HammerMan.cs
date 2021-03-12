@@ -44,6 +44,10 @@ public class HammerMan : Player
                     GameMgr.Instance.Obstacle.SetTile(oPos, null);
                     _currento2 -= 10;
                     O2Gage.fillAmount = _currento2 / _maxo2; // 산소 UI 변화
+                    if (GameMgr.Instance.RescueTilemap.GetTile(oPos - GameMgr.Instance.RescueTilemap.WorldToCell(transform.position)) != null)
+                    {
+                        _playerAct = _Act.Panic; // 턴제한 추가 필요
+                    }
                 }
                 break;
             }

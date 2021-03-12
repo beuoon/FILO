@@ -29,5 +29,7 @@ public class FollowCam : MonoBehaviour
             GameMgr.Instance.CurrentChar--;
         }
         Target = Players[GameMgr.Instance.CurrentChar].transform;
+        GameMgr.Instance.Comp_Players[GameMgr.Instance.CurrentChar].ChangeMentalText();
+        GameMgr.Instance.Comp_Players[GameMgr.Instance.CurrentChar].ChangeStateText();
     }
 }
