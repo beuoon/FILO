@@ -51,13 +51,12 @@ public class DisasterMgr {
 		}
 	}
 
-    public IReadOnlyList<Disaster> GetWillActiveEvents() {
-        List<Disaster> willActiveEvents = new List<Disaster>();
+    public Disaster GetWillActiveDisaster() {
         foreach (Disaster disaster in disasters) {
-            if (!disaster.IsSatisfiedWhenNextTurn) break;
-            willActiveEvents.Add(disaster);
+            if (disaster.IsSatisfiedWhenNextTurn)
+                return disaster;
 		}
-        return willActiveEvents;
+        return null;
 	}
 
     private void CreateDisasterObject(Disaster disaster) {
