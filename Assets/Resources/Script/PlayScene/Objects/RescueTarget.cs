@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Tilemaps;
 
 public class RescueTarget : MonoBehaviour
 {
     public Image HPGage;
+    public Tile RTTile; // Rescue Target Tile
+    public Image SmileMark;
 
     private enum _state { Panic, Static }
     private _state _RescueTargetState;
@@ -20,10 +23,10 @@ public class RescueTarget : MonoBehaviour
     protected float _MaxHP = 60.0f;
     protected float _currentHP = 0.0f;
     private int _panicMoveCount = 2;
-    private float _speed = 1000.0f;
+    private float _speed = 100.0f;
 
     // Start is called before the first frame update
-    protected virtual void Start()
+    private void Start()
     {
         _currentHP = _MaxHP;
         switch(_RescueTargetState)
@@ -35,19 +38,20 @@ public class RescueTarget : MonoBehaviour
                 _rescueCount = 2;
                 break;
         }
+        GameMgr.Instance.RescueTilemap.SetTile(GameMgr.Instance.RescueTilemap.WorldToCell(transform.position), RTTile);
     }
 
-    public virtual void TurnEndActive()
+    public void TurnEndActive()
     {
         if (GameMgr.Instance.GameTurn % 1 == 0)
         {
+            Debug.Log("Start");
             StartCoroutine(Move());
         }
     }
 
-    protected virtual void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log(other.name);
         if (other.CompareTag("Fire"))
         {
             _currentHP -= 25.0f;
@@ -70,6 +74,16 @@ public class RescueTarget : MonoBehaviour
         }
     }
 
+    public void ActiveSmileMark()
+    {
+        //StartCoroutine()
+    }
+
+    //IEnumerator DisableSmileMarkCounter()
+    //{
+    //    //yield return new WaitWhile(())
+    //}
+
     IEnumerator Move()
     {
         int randx = 0;
@@ -89,10 +103,10 @@ public class RescueTarget : MonoBehaviour
         }
         Vector3Int rPos = new Vector3Int(randx, randy, 0);
         Vector3Int nPos = GameMgr.Instance.BackTile.WorldToCell(transform.position) + rPos;
-        Vector3 arrivePos = GameMgr.Instance.BackTile.CellToWorld(nPos);
+        Vector3 arrivePos = GameMgr.Instance.BackTile.CellToWorld(nPos) - (GameMgr.Instance.BackTile.cellSize / 2);
         while (_panicMoveCount > 0)
         {
-            transform.Translate((Vector3)rPos * _speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, arrivePos, _speed * Time.deltaTime);
             yield return null;
             if (Vector3.Distance(arrivePos, transform.position) < 10f)
             {
@@ -112,9 +126,11 @@ public class RescueTarget : MonoBehaviour
                 transform.position = new Vector3(arrivePos.x, arrivePos.y);
                 rPos = new Vector3Int(randx, randy, 0);
                 nPos = GameMgr.Instance.BackTile.WorldToCell(transform.position) + rPos;
-                arrivePos = GameMgr.Instance.BackTile.CellToWorld(nPos);
+                arrivePos = GameMgr.Instance.BackTile.CellToWorld(nPos) - (GameMgr.Instance.BackTile.cellSize / 2);
 
                 _panicMoveCount--;
+                GameMgr.Instance.RescueTilemap.SetTile(GameMgr.Instance.RescueTilemap.WorldToCell(transform.position) - new Vector3Int(randx, randy, 0), null);
+                GameMgr.Instance.RescueTilemap.SetTile(GameMgr.Instance.RescueTilemap.WorldToCell(transform.position), RTTile);
             }
         }
         _panicMoveCount = 2;
