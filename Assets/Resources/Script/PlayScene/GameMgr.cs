@@ -44,6 +44,7 @@ public class GameMgr : MonoBehaviour
     public Transform RescueTargets; // 생존자의 부모 오브젝트
     public Tilemap BackTile; // Background Tilemap
     public Tilemap Obstacle; // Obstacel Tilemap
+    public Tilemap RescueTilemap; // RescueTarget Tilemap
 
     private RescueTarget[] _RTs; // 생존자들의 Components
     [SerializeField]
@@ -103,7 +104,7 @@ public class GameMgr : MonoBehaviour
         {
             Comp_Players[i].TurnEndActive();
         }
-        for(int i=0; i< TileMgr.Instance.Fires.Count; i++) // 큰 불 생성
+        for(int i=0, count = TileMgr.Instance.Fires.Count; i< count; i++) // 큰 불 생성
         {
             TileMgr.Instance.Fires[i].SpreadFire();
         }

@@ -5,7 +5,6 @@ using UnityEngine.Tilemaps; // Tilemap용
 
 public class Fire : MonoBehaviour
 {
-    private Tilemap obstacles; // 불 타일이 위치할 타일맵
     public TileBase TFire; // 해당 오브젝트를 포함하는 TileBase
     private Vector3Int _pos; // 타일맵 상의 좌표
     public Vector3Int Pos // 좌표 Property
@@ -18,7 +17,6 @@ public class Fire : MonoBehaviour
     
     private void Start()
     {
-        obstacles = GameObject.Find("Grid/Obstacle").GetComponent<Tilemap>();
         transform.Translate(0, 0, -1);
         _SearchArea = new List<int>();
         for(int i=0; i<25;i++)
@@ -34,10 +32,9 @@ public class Fire : MonoBehaviour
             for(int y=-1; y<=1; y++)
             {
                 Vector3Int nPos = new Vector3Int(_pos.x + x, _pos.y + y, _pos.z);
-                Debug.Log(gameObject.name + x.ToString() + "," + y.ToString());
-                if (obstacles.GetTile(nPos) == null)
+                if (GameMgr.Instance.Obstacle.GetTile(nPos) == null)
                 {
-                    obstacles.SetTile(nPos, TFire);
+                    GameMgr.Instance.Obstacle.SetTile(nPos, TFire);
                 }
             }
         }
@@ -71,10 +68,9 @@ public class Fire : MonoBehaviour
         for(int i=0; i<_SearchArea.Count; i++)
         {
             Vector3Int nPos = new Vector3Int(_pos.x + (_SearchArea[i] % 5 -2), _pos.y + (_SearchArea[i] / 5 - 2), _pos.z);  // 랜덤으로 타일맵의 좌표 할당
-            if(obstacles.GetTile(nPos) == null) // 해당 위치에 아무것도 없으면 작은 불 생성
+            if(GameMgr.Instance.Obstacle.GetTile(nPos) == null) // 해당 위치에 아무것도 없으면 작은 불 생성
             {
-                //좌표값의 변화에 따른 코드 수정 필요함
-                GameMgr.Instance.Embers.GetChild(GameMgr.Instance.UsedEmberCount).position = GameMgr.Instance.BackTile.CellToWorld(nPos);
+                GameMgr.Instance.Embers.GetChild(GameMgr.Instance.UsedEmberCount).position = GameMgr.Instance.BackTile.CellToWorld(nPos) - (GameMgr.Instance.BackTile.cellSize / 2);
                 GameMgr.Instance.Embers.GetChild(GameMgr.Instance.UsedEmberCount).gameObject.SetActive(true);
                 GameMgr.Instance.UsedEmberCount++;
                 break;
