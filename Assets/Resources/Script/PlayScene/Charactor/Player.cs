@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Tilemaps;
 
-public class Player : MonoBehaviour
+public class Player : Charactor
 {
     // UI 및 타일 정보
     public Image O2Gage; // 산소
@@ -26,35 +26,7 @@ public class Player : MonoBehaviour
     private int _playerNum = 0; // 캐릭터 번호
     [SerializeField]
     private float _movespeed = 0.0f; // 캐릭터 이동속도
-    [SerializeField]
-    protected float _maxo2 = 0.0f; // 캐릭터 최대 산소량
-    public float MaxO2 // O2 Property
-    {
-        get { return _maxo2; }
-    }
-    protected float _currento2 = 0.0f; // 캐릭터 현재 산소량
-    public float CurrentO2 // 현재 O2 Property
-    {
-        get { return _currento2; }
-        set { _currento2 = value; }
-    }
-    [SerializeField]
-    private float _useo2 = 0.0f; // 1초에 사용되는 산소량
-    [SerializeField]
-    private float _maxHp = 0.0f; // 최대 체력
-    public float MaxHP
-    {
-        get { return _maxHp; }
-        set { _maxHp = value; }
-    }
-    
-    private float _currentHp = 0.0f; // 현재 체력
-    public float CurrentHP
-    {
-        get { return _currentHp; }
-        set { _currentHp = value; }
-    }
-    
+
     [SerializeField]
     private float _maxMental = 0; // 최대 멘탈
     private float _currentMental = 0; // 현재 멘탈
@@ -63,24 +35,24 @@ public class Player : MonoBehaviour
     // 타일 충돌체크용 값
     private GridLayout _tileLayout; // 타일맵 값 변경용 변수 (Tilemap::Background)
     private Vector3Int _currentTilePos = Vector3Int.zero; // 현재 캐릭터의 타일맵 좌표
-    public Vector3Int currentTilePos
-    {
-        get { return _currentTilePos; }
-    }
 
     // Local Component
     private Animator _anim; // 캐릭터 애니메이션
     [SerializeField]
     private Transform _body = null; // 캐릭터 이미지의 Transform
-
-    protected virtual void Start()
+    
+    public Vector3Int currentTilePos
     {
+        get { return _currentTilePos; }
+    }
+
+    protected override void Start()
+    {
+        base.Start();
         _tileLayout = GameMgr.Instance.BackTile.GetComponent<GridLayout>();
         _mentalText = GameObject.FindWithTag("MentalText").GetComponent<Text>();
         _stateText = GameObject.FindWithTag("StateText").GetComponent<Text>();
         _anim = GetComponentInChildren<Animator>();
-        _currento2 = _maxo2;
-        _currentHp = _maxHp;
         _currentMental = _maxMental;
         //SetFOV();
     }
@@ -115,13 +87,13 @@ public class Player : MonoBehaviour
             }
             if (hor != 0.0f) // 좌, 우 이동중이라면
             {
-                _currento2 -= Time.deltaTime * _useo2; // 산소 감소
+                SetCurrentO2(-(_useo2 * Time.deltaTime));
                 GameMgr.Instance.EmberTime += Time.deltaTime / 2; // 작은불 재생성 시간 증가
                 _moveDir = new Vector3(hor, 0, 0); // 바라보는 방향 변경
             }
             if (ver != 0.0f) //상, 하 이동중이라면
             {
-                _currento2 -= Time.deltaTime * _useo2; // 산소 감소
+                SetCurrentO2(-(_useo2 * Time.deltaTime));
                 GameMgr.Instance.EmberTime += Time.deltaTime / 2; // 작은불 재생성 시간 증가
             }
             //if (_currentTilePos != _tileLayout.WorldToCell(transform.position))
@@ -204,11 +176,7 @@ public class Player : MonoBehaviour
 
     public virtual void TurnEndActive() // 캐릭터가 턴이 끝날 때 호출되는 함수
     {
-        _currento2 += 10.0f; // 현재 산소량 증가
-        if (_currento2 > _maxo2) // 최대 산소량보다 높으면 최대산소로 제한
-        {
-            _currento2 = _maxo2;
-        }
+        SetCurrentO2(10.0f);
         if(_playerAct == _Act.Rescue) // 구조중이라면
         {
             _rescueTarget.RescueCount--; // 구조중인 대상의 남은 구조턴 감소
@@ -355,38 +323,26 @@ public class Player : MonoBehaviour
 
     private void UseO2Can() // 산소캔 사용
     {
-        _currento2 += 45; // 현재 산소량 증가
-        if (_currento2 > _maxo2) // 현재 산소량이 최대치 초과시 최대치로 제한
-        {
-            _currento2 = _maxo2;
-        }
+        SetCurrentO2(45.0f);
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D other) { // 충돌체크
         switch (other.tag) {
         case "Fire": // 큰 불
-            _currentHp -= 25.0f; // 체력 감소
-            _currentMental -= 2; // 멘탈 감소
+            SetCurrentHP(-25.0f); // 체력 감소
+            SetCurrentMental(-2); // 멘탈 감소
             break;
 
         case "Ember": // 작은 불
-            _currentHp -= 10.0f; // 체력 감소
-            _currentMental--; // 멘탈 감소
+            SetCurrentHP(-10.0f); // 체력 감소
+            SetCurrentMental(-1); // 멘탈 감소
             break;
 
         case "Electric":
         case "Water(Electric)":
-            _currentHp -= 35.0f; // 체력 감소
-            _currentMental -= 2; // 멘탈 감소
+            SetCurrentHP(-35.0f); // 체력 감소
+            SetCurrentMental(-2); // 멘탈 감소
             break;
-        }
-        if(_currentHp <= 0)
-        {
-            _playerAct = _Act.Retire;
-        }
-        else if(_currentMental <= 0)
-        {
-            _playerAct = _Act.Panic;
         }
 
         HPGage.fillAmount = _currentHp / _maxHp; // 체력 UI 감소
@@ -461,6 +417,45 @@ public class Player : MonoBehaviour
                 _stateText.text = "정    상";
                 _stateText.color = new Color(1, 1, 1);
                 break;
+        }
+    }
+
+    public override void SetCurrentHP(float value)
+    {
+        _currentHp += value;
+        if(_currentHp <= 0 )
+        {
+            _playerAct = _Act.Retire;
+        }
+        else if(_currentHp > _maxHp)
+        {
+            _currentHp = _maxHp;
+        }
+    }
+
+    public override void SetCurrentO2(float value)
+    {
+        _currento2 += value;
+        if(_currento2 <= 0)
+        {
+            _playerAct = _Act.Retire;
+        }
+        else if(_currento2 > _maxo2)
+        {
+            _currento2 = _maxo2;
+        }
+    }
+
+    private void SetCurrentMental(int value)
+    {
+        _currentMental += value;
+        if(_currentMental <= 0)
+        {
+            _playerAct = _Act.Panic;
+        }
+        if(_currentMental > _maxMental)
+        {
+            _currentMental = _maxMental;
         }
     }
 
