@@ -48,8 +48,8 @@ public class Nurse : Player
                 {
                     if(player.currentTilePos == oPos)
                     {
-                        player.SetCurrentHP(30.0f);
-                        player.SetCurrentO2(20.0f);
+                        player.AddHP(30.0f);
+                        player.AddO2(20.0f);
                         player.HPGage.fillAmount = player.CurrentHP / player.MaxHP;
                         player.O2Gage.fillAmount = player.CurrentO2 / player.MaxO2;
                         _currento2 -= 15;

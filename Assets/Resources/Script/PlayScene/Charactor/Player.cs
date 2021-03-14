@@ -87,13 +87,13 @@ public class Player : Charactor
             }
             if (hor != 0.0f) // 좌, 우 이동중이라면
             {
-                SetCurrentO2(-(_useo2 * Time.deltaTime));
+                AddO2(-(_useo2 * Time.deltaTime));
                 GameMgr.Instance.EmberTime += Time.deltaTime / 2; // 작은불 재생성 시간 증가
                 _moveDir = new Vector3(hor, 0, 0); // 바라보는 방향 변경
             }
             if (ver != 0.0f) //상, 하 이동중이라면
             {
-                SetCurrentO2(-(_useo2 * Time.deltaTime));
+                AddO2(-(_useo2 * Time.deltaTime));
                 GameMgr.Instance.EmberTime += Time.deltaTime / 2; // 작은불 재생성 시간 증가
             }
             //if (_currentTilePos != _tileLayout.WorldToCell(transform.position))
@@ -176,7 +176,7 @@ public class Player : Charactor
 
     public virtual void TurnEndActive() // 캐릭터가 턴이 끝날 때 호출되는 함수
     {
-        SetCurrentO2(10.0f);
+        AddO2(10.0f);
         if(_playerAct == _Act.Rescue) // 구조중이라면
         {
             _rescueTarget.RescueCount--; // 구조중인 대상의 남은 구조턴 감소
@@ -323,25 +323,25 @@ public class Player : Charactor
 
     private void UseO2Can() // 산소캔 사용
     {
-        SetCurrentO2(45.0f);
+        AddO2(45.0f);
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D other) { // 충돌체크
         switch (other.tag) {
         case "Fire": // 큰 불
-            SetCurrentHP(-25.0f); // 체력 감소
-            SetCurrentMental(-2); // 멘탈 감소
+            AddHP(-25.0f); // 체력 감소
+            AddMental(-2); // 멘탈 감소
             break;
 
         case "Ember": // 작은 불
-            SetCurrentHP(-10.0f); // 체력 감소
-            SetCurrentMental(-1); // 멘탈 감소
+            AddHP(-10.0f); // 체력 감소
+            AddMental(-1); // 멘탈 감소
             break;
 
         case "Electric":
         case "Water(Electric)":
-            SetCurrentHP(-35.0f); // 체력 감소
-            SetCurrentMental(-2); // 멘탈 감소
+            AddHP(-35.0f); // 체력 감소
+            AddMental(-2); // 멘탈 감소
             break;
         }
 
@@ -420,33 +420,23 @@ public class Player : Charactor
         }
     }
 
-    public override void SetCurrentHP(float value)
+    public override void AddHP(float value)
     {
-        _currentHp += value;
-        if(_currentHp <= 0 )
-        {
+        base.AddHP(value);
+
+        if (CurrentHP <= 0 )
             _playerAct = _Act.Retire;
-        }
-        else if(_currentHp > _maxHp)
-        {
-            _currentHp = _maxHp;
-        }
     }
 
-    public override void SetCurrentO2(float value)
+    public override void AddO2(float value)
     {
-        _currento2 += value;
-        if(_currento2 <= 0)
-        {
+        base.AddO2(value);
+
+        if (CurrentO2 <= 0)
             _playerAct = _Act.Retire;
-        }
-        else if(_currento2 > _maxo2)
-        {
-            _currento2 = _maxo2;
-        }
     }
 
-    private void SetCurrentMental(int value)
+    private void AddMental(int value)
     {
         _currentMental += value;
         if(_currentMental <= 0)

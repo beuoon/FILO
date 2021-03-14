@@ -36,6 +36,19 @@ public abstract class Charactor : MonoBehaviour
         _currentHp = _maxHp;
     }
 
-    public abstract void SetCurrentHP(float value);
-    public abstract void SetCurrentO2(float value);
+    public virtual void AddHP(float value) {
+        _currentHp += value;
+        if (_currentHp < 0)
+            _currentHp = 0;
+        else if (_currentHp > _maxHp)
+            _currentHp = _maxHp;
+    }
+
+    public virtual void AddO2(float value) {
+        _currento2 += value;
+        if (_currento2 < 0)
+            _currento2 = 0;
+        else if (_currento2 > _maxo2)
+            _currento2 = _maxo2;
+    }
 }

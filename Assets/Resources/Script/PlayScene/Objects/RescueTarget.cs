@@ -49,7 +49,7 @@ public class RescueTarget : Charactor
     {
         if (other.CompareTag("Fire"))
         {
-            SetCurrentHP(-25.0f);
+            AddHP(-25.0f);
             HPGage.fillAmount = _currentHp / _maxHp;
             if(_currentHp / _maxHp < 0.5f && _RescueTargetState == _state.Panic)
             {
@@ -59,7 +59,7 @@ public class RescueTarget : Charactor
         }
         else if (other.CompareTag("Ember"))
         {
-            SetCurrentHP(-25.0f);
+            AddHP(-25.0f);
             HPGage.fillAmount = _currentHp / _maxHp;
             if (_currentHp / _maxHp < 0.5f && _RescueTargetState == _state.Panic)
             {
@@ -134,20 +134,11 @@ public class RescueTarget : Charactor
         _panicMoveCount = 2;
         Debug.Log("Panic Done");
     }
-    public override void SetCurrentHP(float value)
+    public override void AddHP(float value)
     {
-        _currentHp += value;
-        if (_currentHp <= 0)
-        {
-            Destroy(gameObject);
-        }
-        else if (_currentHp > _maxHp)
-        {
-            _currentHp = _maxHp;
-        }
-    }
+        base.AddHP(value);
 
-    public override void SetCurrentO2(float value)
-    {
+        if (CurrentHP <= 0)
+            Destroy(gameObject);
     }
 }
