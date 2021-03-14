@@ -38,8 +38,12 @@ public class RescueTarget : Charactor {
     }
 
     public void TurnEndActive() {
-        if (GameMgr.Instance.GameTurn % 1 == 0 && _RescueTargetState == _state.Panic)
+        if (GameMgr.Instance.GameTurn % 1 == 0 && _RescueTargetState == _state.Panic) {
+            _moveDone = false;
             StartCoroutine(Move());
+        }
+        else
+            _moveDone = true;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -124,8 +128,6 @@ public class RescueTarget : Charactor {
                 _panicMoveCount--;
             }
         }
-        TileMgr.Instance.RescueTargets.Remove(GameMgr.Instance.BackTile.WorldToCell(transform.position));
-        TileMgr.Instance.RescueTargets.Add(GameMgr.Instance.BackTile.WorldToCell(transform.position), this);
         _panicMoveCount = 2;
         _moveDone = true;
     }
