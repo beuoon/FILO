@@ -23,7 +23,7 @@ public class HammerMan : Player
     public override void ActiveSkill()
     {
         base.ActiveSkill();
-        if(_currento2 > 10) // 현재 산소가 10 이상있다면
+        if (CurrentO2 > 10) // 현재 산소가 10 이상있다면
         {
             StartCoroutine(RescueHammer()); // 스킬 발동
         }
@@ -42,8 +42,7 @@ public class HammerMan : Player
                 if (GameMgr.Instance.Obstacle.GetTile(oPos) != null) // 클릭 좌표에 장애물이 있다면 제거
                 {
                     GameMgr.Instance.Obstacle.SetTile(oPos, null);
-                    _currento2 -= 10;
-                    O2Gage.fillAmount = _currento2 / _maxo2; // 산소 UI 변화
+                    AddO2(-10);
                     if (GameMgr.Instance.RescueTilemap.GetTile(oPos - GameMgr.Instance.RescueTilemap.WorldToCell(transform.position)) != null)
                     {
                         _playerAct = _Act.Panic; // 턴제한 추가 필요
