@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Disaster_ShortCircuit : DisasterObject {
 
 	private static Sprite[] ObjectSprites = null;
 	private const string RESOURCE_PATH = "Sprite/Disaster/ShortCircuit";
+
+	[SerializeField]
+	private TileBase electricTile = null;
 
 	protected override void Start() {
 		if (ObjectSprites == null)
@@ -17,5 +21,7 @@ public class Disaster_ShortCircuit : DisasterObject {
 	}
 
 	protected override void Active() {
+		if (GameMgr.Instance.Obstacle.GetTile(pos) == null)
+			GameMgr.Instance.Obstacle.SetTile(pos, electricTile);
 	}
 }
