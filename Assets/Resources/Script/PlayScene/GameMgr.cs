@@ -42,9 +42,9 @@ public class GameMgr : MonoBehaviour {
     public Tilemap RescueTilemap; // RescueTarget Tilemap
 
     [SerializeField]
-    private Image    DisasterAlaram;
+    private Image    DisasterAlaram = null;
     [SerializeField]
-    private Text    DisasterAlaramText;
+    private Text    DisasterAlaramText = null;
 
     [SerializeField]
     private Text _timerText = null; // 시계 UI

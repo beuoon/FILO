@@ -81,54 +81,37 @@ public class RescueTarget : Charactor {
         SmileMark.SetActive(false);
     }
 
-    IEnumerator Move()
-    {
-        int randx = 0;
-        int randy = 0;
-        while (true)
-        {
-            randx = Random.Range(-1, 2);
-            randy = Random.Range(-1, 2);
-            if (randx == 0 && randy == 0)
-            {
-                continue;
-            }
-            else
-            {
+    IEnumerator Move() {
+        yield return null;
+
+        for (int i = 0; i < _panicMoveCount; i++) {
+            Vector3Int pPos = GameMgr.Instance.BackTile.WorldToCell(transform.position);
+            Vector3Int nPos;
+
+            while (true) {
+                int randx = Random.Range(-1, 2);
+                int randy = Random.Range(-1, 2);
+                nPos = pPos + new Vector3Int(randx, randy, 0);
+
+                if (TileMgr.Instance.RescueTargets.ContainsKey(nPos))
+                    continue;
+
                 break;
             }
-        }
-        Vector3Int rPos = new Vector3Int(randx, randy, 0);
-        Vector3Int nPos = GameMgr.Instance.BackTile.WorldToCell(transform.position) + rPos;
-        Vector3 arrivePos = GameMgr.Instance.BackTile.CellToWorld(nPos) - (GameMgr.Instance.BackTile.cellSize / 2);
-        while (_panicMoveCount > 0)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, arrivePos, _speed * Time.deltaTime);
-            yield return null;
-            if (Vector3.Distance(arrivePos, transform.position) < 10f)
-            {
-                while (true)
-                {
-                    randx = Random.Range(-1, 2);
-                    randy = Random.Range(-1, 2);
-                    if (randx == 0 && randy == 0)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                transform.position = new Vector3(arrivePos.x, arrivePos.y);
-                rPos = new Vector3Int(randx, randy, 0);
-                nPos = GameMgr.Instance.BackTile.WorldToCell(transform.position) + rPos;
-                arrivePos = GameMgr.Instance.BackTile.CellToWorld(nPos) - (GameMgr.Instance.BackTile.cellSize / 2);
 
-                _panicMoveCount--;
+            TileMgr.Instance.RescueTargets.Remove(pPos);
+            TileMgr.Instance.RescueTargets.Add(nPos, this);
+
+            Vector3 arrivePos = GameMgr.Instance.BackTile.CellToWorld(nPos) + (GameMgr.Instance.BackTile.cellSize / 2);
+
+            float delta = _speed * Time.deltaTime;
+            while (Vector3.Distance(arrivePos, transform.position) > delta) {
+                transform.position = Vector3.MoveTowards(transform.position, arrivePos, delta);
+                yield return null;
             }
+
+            transform.position = arrivePos;
         }
-        _panicMoveCount = 2;
         _moveDone = true;
     }
 
