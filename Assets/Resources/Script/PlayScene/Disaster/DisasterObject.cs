@@ -10,6 +10,8 @@ public abstract class DisasterObject : MonoBehaviour {
     private float accumTime = 0;
     private int spriteIndex = 0;
 
+    private bool bActive = false;
+
     // Start is called before the first frame update
     protected virtual void Start() {
         spriteRenderer = this.GetComponent<SpriteRenderer>();
@@ -18,16 +20,22 @@ public abstract class DisasterObject : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if (bActive) return;
+
         accumTime += Time.deltaTime;
         spriteIndex = Mathf.FloorToInt(accumTime / frameInterval);
 
         if (spriteIndex >= sprites.Length) {
             Active();
-            Destroy(this.gameObject);
+            bActive = true;
         }
         else
             spriteRenderer.sprite = sprites[spriteIndex];
     }
 
     protected abstract void Active();
+
+    public bool IsActive {
+        get { return bActive; }
+    }
 }

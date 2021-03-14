@@ -38,17 +38,21 @@ public class DisasterMgr {
         });
     }
 
-    public void TurnUpdate() {
+    public DisasterObject TurnUpdate() {
+        DisasterObject disasterObject = null;
+
 		for (int i = 0; i < disasters.Count;) {
             disasters[i].Update();
 
             if (disasters[i].IsSatisfied) {
-                CreateDisasterObject(disasters[i]);
+                disasterObject = CreateDisasterObject(disasters[i]);
                 disasters.RemoveAt(i);
             }
             else
                 i++;
 		}
+
+        return disasterObject;
 	}
 
     public Disaster GetWillActiveDisaster() {
@@ -59,7 +63,7 @@ public class DisasterMgr {
         return null;
 	}
 
-    private void CreateDisasterObject(Disaster disaster) {
+    private DisasterObject CreateDisasterObject(Disaster disaster) {
         Object obj = null;
         Vector3 pos = GameMgr.Instance.BackTile.CellToWorld(disaster.position);
         pos += GameMgr.Instance.BackTile.cellSize / 2.0f;
@@ -71,6 +75,7 @@ public class DisasterMgr {
         case Disaster.DisasterType.SMOKE:         obj = Smoke;         break;
         }
 
-        Object.Instantiate(obj, pos, Quaternion.identity);
+        GameObject gameObj = (GameObject)Object.Instantiate(obj, pos, Quaternion.identity, GameMgr.Instance.transform);
+        return gameObj.GetComponent<DisasterObject>();
     }
 }

@@ -14,13 +14,14 @@ public class RescueTarget : Charactor {
 
     private int _panicMoveCount = 2;
     private float _speed = 100.0f;
+    private bool _moveDone = false;
+
     public int RescueCount
     {
         get { return _rescueCount; }
         set { _rescueCount = value; }
     }
 
-    // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
@@ -36,12 +37,9 @@ public class RescueTarget : Charactor {
         }
     }
 
-    public void TurnEndActive()
-    {
+    public void TurnEndActive() {
         if (GameMgr.Instance.GameTurn % 1 == 0 && _RescueTargetState == _state.Panic)
-        {
             StartCoroutine(Move());
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -129,8 +127,9 @@ public class RescueTarget : Charactor {
         TileMgr.Instance.RescueTargets.Remove(GameMgr.Instance.BackTile.WorldToCell(transform.position));
         TileMgr.Instance.RescueTargets.Add(GameMgr.Instance.BackTile.WorldToCell(transform.position), this);
         _panicMoveCount = 2;
-        Debug.Log("Panic Done");
+        _moveDone = true;
     }
+
     public override void AddHP(float value)
     {
         base.AddHP(value);
@@ -138,4 +137,7 @@ public class RescueTarget : Charactor {
         if (CurrentHP <= 0)
             Destroy(gameObject);
     }
+    public bool IsMoveDone {
+        get { return _moveDone; }
+	}
 }
