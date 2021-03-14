@@ -7,8 +7,6 @@ using UnityEngine.Tilemaps;
 public class Player : Charactor
 {
     // UI 및 타일 정보
-    public Image O2Gage; // 산소
-    public Image HPGage; // 체력
     public Image MTGage; // 멘탈
     public GameObject UI_Actives; // 행동 버튼 UI
     public GameObject UI_ToolBtns; // 도구 버튼 UI
@@ -69,10 +67,9 @@ public class Player : Charactor
         float ver = Input.GetAxisRaw("Vertical");
 
         //구조 상태가 아니며, 현재 체력과 산소가 남아있는 현재 조종중인 캐릭터를 Translate로 이동시킨다.
-        if (_currento2 > 0.0f && GameMgr.Instance.CurrentChar == _playerNum && _currentHp > 0.0f && _playerAct != _Act.Rescue && _currentMental > 0)
+        if (CurrentO2 > 0.0f && GameMgr.Instance.CurrentChar == _playerNum && CurrentHP > 0.0f && _playerAct != _Act.Rescue && _currentMental > 0)
         {
             this.transform.Translate(hor * Time.deltaTime * _movespeed, ver * Time.deltaTime * _movespeed, 0.0f);
-            O2Gage.fillAmount = _currento2 / _maxo2; // 산소 UI 변화
             if (GameMgr.Instance.CheckEmberTick()) // 작은 불 재생성
             {
                 for (int i = 0; i < GameMgr.Instance.UsedEmberCount; i++) // 기존에 있던 작은불들 Active false
@@ -87,13 +84,13 @@ public class Player : Charactor
             }
             if (hor != 0.0f) // 좌, 우 이동중이라면
             {
-                AddO2(-(_useo2 * Time.deltaTime));
+                AddO2(-(UseO2 * Time.deltaTime));
                 GameMgr.Instance.EmberTime += Time.deltaTime / 2; // 작은불 재생성 시간 증가
                 _moveDir = new Vector3(hor, 0, 0); // 바라보는 방향 변경
             }
             if (ver != 0.0f) //상, 하 이동중이라면
             {
-                AddO2(-(_useo2 * Time.deltaTime));
+                AddO2(-(UseO2 * Time.deltaTime));
                 GameMgr.Instance.EmberTime += Time.deltaTime / 2; // 작은불 재생성 시간 증가
             }
             //if (_currentTilePos != _tileLayout.WorldToCell(transform.position))
@@ -345,7 +342,6 @@ public class Player : Charactor
             break;
         }
 
-        HPGage.fillAmount = _currentHp / _maxHp; // 체력 UI 감소
         ChangeMentalText(); // 멘탈 UI 변경
         ChangeStateText(); // 상태 UI 변경
     }

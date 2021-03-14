@@ -4,9 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Tilemaps;
 
-public class RescueTarget : Charactor
-{
-    public Image HPGage;
+public class RescueTarget : Charactor {
     public GameObject SmileMark;
 
     private enum _state { Panic, Static }
@@ -26,6 +24,7 @@ public class RescueTarget : Charactor
     protected override void Start()
     {
         base.Start();
+
         switch(_RescueTargetState)
         {
             case _state.Panic:
@@ -50,8 +49,7 @@ public class RescueTarget : Charactor
         if (other.CompareTag("Fire"))
         {
             AddHP(-25.0f);
-            HPGage.fillAmount = _currentHp / _maxHp;
-            if(_currentHp / _maxHp < 0.5f && _RescueTargetState == _state.Panic)
+            if(CurrentHP / MaxHP < 0.5f && _RescueTargetState == _state.Panic)
             {
                 _rescueCount++;
                 _RescueTargetState = _state.Static;
@@ -60,8 +58,7 @@ public class RescueTarget : Charactor
         else if (other.CompareTag("Ember"))
         {
             AddHP(-25.0f);
-            HPGage.fillAmount = _currentHp / _maxHp;
-            if (_currentHp / _maxHp < 0.5f && _RescueTargetState == _state.Panic)
+            if (CurrentHP / MaxHP < 0.5f && _RescueTargetState == _state.Panic)
             {
                 _rescueCount++;
                 _RescueTargetState = _state.Static;

@@ -28,7 +28,7 @@ public class Nurse : Player
     public override void ActiveSkill()
     {
         base.ActiveSkill();
-        if (_currento2 > 15) // 현재 산소가 10 이상있다면
+        if (CurrentO2 > 15) // 현재 산소가 10 이상있다면
         {
             StartCoroutine(Heal()); // 스킬 발동
         }
@@ -50,10 +50,7 @@ public class Nurse : Player
                     {
                         player.AddHP(30.0f);
                         player.AddO2(20.0f);
-                        player.HPGage.fillAmount = player.CurrentHP / player.MaxHP;
-                        player.O2Gage.fillAmount = player.CurrentO2 / player.MaxO2;
-                        _currento2 -= 15;
-                        O2Gage.fillAmount = _currento2 / _maxo2;
+                        AddO2(-15);
                         break;
                     }
                 }
