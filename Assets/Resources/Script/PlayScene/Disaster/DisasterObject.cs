@@ -11,7 +11,11 @@ public abstract class DisasterObject : MonoBehaviour {
     private int spriteIndex = 0;
 
     private bool bActive = false;
-    public Vector3Int pos;
+    private Vector3Int _pos;
+    public Vector3Int Pos {
+        set { _pos = value; }
+        get { return _pos; }
+	}
 
     // Start is called before the first frame update
     protected virtual void Start() {

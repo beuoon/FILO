@@ -21,7 +21,7 @@ public class Disaster_ShortCircuit : DisasterObject {
 	}
 
 	protected override void Active() {
-		if (GameMgr.Instance.Obstacle.GetTile(pos) == null)
-			GameMgr.Instance.Obstacle.SetTile(pos, electricTile);
+		if (GameMgr.Instance.Obstacle.GetTile(Pos) == null)
+			GameMgr.Instance.Obstacle.SetTile(Pos, electricTile);
 	}
 }

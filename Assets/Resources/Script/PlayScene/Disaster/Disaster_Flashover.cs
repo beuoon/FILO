@@ -23,7 +23,7 @@ public class Disaster_Flashover : DisasterObject {
 	protected override void Active() {
 		for (int x = 0; x <= 1; x++) {
 			for (int y = 0; y <= 1; y++) {
-				Vector3Int targetPos = pos + new Vector3Int(x, y, 0);
+				Vector3Int targetPos = Pos + new Vector3Int(x, y, 0);
 				if (GameMgr.Instance.Obstacle.GetTile(targetPos) == null)
 					GameMgr.Instance.Obstacle.SetTile(targetPos, fireTile);
 			}

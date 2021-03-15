@@ -77,7 +77,7 @@ public class DisasterMgr {
 
         GameObject gameObj = (GameObject)Object.Instantiate(obj, pos, Quaternion.identity, GameMgr.Instance.transform);
         DisasterObject disasterObject = gameObj.GetComponent<DisasterObject>();
-        disasterObject.pos = disaster.position;
+        disasterObject.Pos = disaster.position;
 
         return disasterObject;
     }
